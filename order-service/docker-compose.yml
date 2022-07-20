@@ -1,0 +1,37 @@
+version: "3.7"
+services:
+  postgres:
+    image: "postgres:13.2"
+    container_name: postgres-new
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=123456
+      - GDATA=/data/postgres
+    volumes:
+      - postgresql_data:/var/lib/postgresql/data
+  axonserver:
+    image: axoniq/axonserver
+    hostname: axonserver
+    environment:
+      - AXONSERVER_EVENTSTORE=/eventstore
+      - AXONSERVER_CONTROLDB=/controldb
+      - AXONIQ_AXONSERVER_DEVMODE_ENABLED=true
+      - AXONIQ_AXONSERVER_NAME=MY AXON SERVER
+    volumes:
+      - axonserver-eventstore:/eventstore
+      - axonserver-controldb:/controldb
+    ports:
+      - '8024:8024'
+      - '8124:8124'
+      - '8224:8224'
+    networks:
+      - axon-demo
+volumes:
+  postgresql_data:
+  axonserver-eventstore:
+  axonserver-controldb:
+
+networks:
+  axon-demo:
